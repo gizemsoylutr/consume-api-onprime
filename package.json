@@ -1,0 +1,35 @@
+{
+  "name": "rec-product-api",
+  "version": "1.0.0",
+  "description": "A simple CAP project.",
+  "repository": "<Add your repository here>",
+  "license": "UNLICENSED",
+  "private": true,
+  "dependencies": {
+    "@sap-cloud-sdk/http-client": "^3.2.0",
+    "@sap/cds": "^6",
+    "@sap/xssec": "^3",
+    "express": "^4",
+    "hdb": "^0.19.0",
+    "passport": "^0.6.0"
+  },
+  "devDependencies": {
+    "sqlite3": "^5"
+  },
+  "scripts": {
+    "start": "cds-serve"
+  },
+  "cds": {
+    "requires": {
+      "API_PRODUCT_SRV": {
+        "kind": "odata-v2",
+        "model": "srv/external/API_PRODUCT_SRV",
+        "credentials": {
+          "destination": "REC_400_Markus",
+          "path": "/sap/opu/odata/sap/API_PRODUCT_SRV"
+        }
+    },
+      "auth": "xsuaa"   
+    }
+  }
+}

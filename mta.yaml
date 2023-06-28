@@ -1,0 +1,56 @@
+_schema-version: '3.1'
+ID: rec-product-api
+version: 1.0.0
+description: "A simple CAP project."
+parameters:
+  enable-parallel-deployments: true
+build-parameters:
+  before-all:
+    - builder: custom
+      commands:
+        - npx -p @sap/cds-dk cds build --production
+modules:
+  - name: rec-product-api-srv
+    type: nodejs
+    path: gen/srv
+    parameters:
+      buildpack: nodejs_buildpack
+    build-parameters:
+      builder: npm-ci
+    provides:
+      - name: srv-api # required by consumers of CAP services (e.g. approuter)
+        properties:
+          srv-url: ${default-url}
+    requires:
+      - name: rec-product-api-dest
+      - name: rec-product-api-auth
+      - name: rec-product-api-connectivity
+
+resources:
+  - name: rec-product-api-dest
+    type: org.cloudfoundry.managed-service
+    parameters:
+      config:
+        HTML5Runtime_enabled: false
+        init_data:
+          instance:
+            destinations:
+            existing_destinations_policy: update
+        version: 1.0.0
+      service: destination
+      service-name: rec-product-api-dest
+      service-plan: lite
+  - name: rec-product-api-auth
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: xsuaa
+      service-plan: application
+      path: ./xs-security.json
+  - name: rec-product-api-connectivity
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: connectivity
+      service-plan: lite
+
+     
+
